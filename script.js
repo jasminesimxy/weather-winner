@@ -1,9 +1,12 @@
+var displayInput = document.getElementById("display-input");
+
+
 function getLatandLong () {
     var cityName = document.getElementById("cityName").value // replace by user uinput -- value/doc getelementby id . val or document
-    var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=b928000f7bd3baf95bd741e8c01b8813`
+    var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=155d2cf78a1542364fe20b6634b40ea0`
     fetch(requestURL)
   .then(function (response) {
-    return response.json();
+    return response.json(); 
   })
   .then(function (data) {
     console.log(data);
@@ -16,7 +19,7 @@ function getLatandLong () {
 
 
 function fetchForecast (lat,lon){
-    var requestURL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=b928000f7bd3baf95bd741e8c01b8813`
+    var requestURL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=155d2cf78a1542364fe20b6634b40ea0`
     fetch(requestURL)
   .then(function (response) {
     return response.json();
@@ -29,7 +32,7 @@ function fetchForecast (lat,lon){
 
 
 }
-// create geoweather map account - replace {api key} with my 
+
 
 function showForecast (data){
     //document.getElementById("test").textContent = ""
@@ -54,12 +57,43 @@ document.getElementById("search").addEventListener('click', getLatandLong)
 
 
 // local storage - get value ans set item , save it as a string, on landing -  save as a rrange of string - convert strings to buttons - landing page 
+function readLocalStorage(){
+  var storageHistory = localStorage.getItem("displayInput")
+  if(storageHistory){
+    storageHistory = JSON.parse(storageHistory);
+  }else{
+    storageHistory = [];
+  }
+  return storageHistory;
+}
+
 function getHistoryList (){
+  var storageHistory = readLocalStorage();
+  storageHistory.push(ssearchResults.value);
+  saveToLocalStorage(storageHistory);
+  //console.log(storageHistory);
 
+  var child = displayInputEl.lastElementChild;
+  while (child) {
+    displayInput.removeChild(child);
+    child = displayInput.lastElementChild;
+  }
+
+  var listEl = document.createElement("ol");
+
+  for(var i = 0; i < storageHistory.length; i++){
+    var liEl = document.createElement("li");
+    liEl.textContent = storageHistory[i];
+    listEl.appendChild(liEl);
+    displayInputEl.appendChild(listEl);
+  }
 }
 
-function  savedCitytoLocalStorage(){
 
+function  savedCitytoLocalStorage(storageHistory){
+  localStorage.setItem("displayInput",JSON.stringify(storageHistory));
 }
 
-//document.createelement 
+
+
+
